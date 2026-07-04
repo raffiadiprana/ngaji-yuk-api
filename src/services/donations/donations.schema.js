@@ -13,7 +13,8 @@ export const donationsSchema = Type.Object(
     amount: Type.Number(),
     proof_image: Type.String(),
     is_verified: Type.Number(),
-    created_at: Type.Optional(Type.String({ format: 'date-time' }))
+    created_at: Type.Optional(Type.String({ format: 'date-time' })),
+    reject_reason: Type.Optional(Type.String())
   },
   { $id: 'Donations', additionalProperties: false }
 )
@@ -31,7 +32,8 @@ export const donationsDataSchema = Type.Pick(donationsSchema, [
   'source_bank',
   'amount',
   'proof_image',
-  'is_verified'
+  'is_verified',
+  'reject_reason'
 ], {
   $id: 'DonationsData'
 })

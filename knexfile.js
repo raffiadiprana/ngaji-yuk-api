@@ -5,3 +5,4 @@ import { app } from './src/app.js'
 const config = app.get('mysql')
 
 export default config
+
