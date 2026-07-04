@@ -11,8 +11,14 @@
   },
   "mysql": {
     "client": "mysql",
-    "connection": "mysql://root@127.0.0.1:3307/ngaji-yuk",
-    "charset": "utf8"
+    "connection": {
+      "host": "localhost",
+      "port": 3306,
+      "user": "root",
+      "password": "",
+      "database": "ngaji-yuk",
+      "charset": "utf8"
+    }
   },
   "authentication": {
     "entity": "user",
