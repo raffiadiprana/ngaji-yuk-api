@@ -4,14 +4,8 @@
     "__format": "number"
   },
   "host": "HOSTNAME",
-  "mysql": {
-    "connection": {
-      "host": "MYSQL_HOST",
-      "port": { "__name": "MYSQL_PORT", "__format": "number" },
-      "user": "MYSQL_USER",
-      "password": "MYSQL_PASSWORD",
-      "database": "MYSQL_DATABASE"
-    }
+  "postgresql": {
+    "connection": "DATABASE_URL"
   },
   "authentication": {
     "secret": "FEATHERS_SECRET"

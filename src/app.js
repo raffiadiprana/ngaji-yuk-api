@@ -16,7 +16,7 @@ import path from 'path'
 import { configurationValidator } from './configuration.js'
 import { logger } from './logger.js'
 import { logError } from './hooks/log-error.js'
-import { mysql } from './mysql.js'
+import { postgresql } from './postgresql.js'
 import { authentication } from './authentication.js'
 import { services } from './services/index.js'
 import { channels } from './channels.js'
@@ -71,7 +71,7 @@ app.configure(socketio({
 }))
 
 // Configure DB, auth, services, channels
-app.configure(mysql)
+app.configure(postgresql)
 app.configure(authentication)
 app.configure(services)
 app.configure(channels)
