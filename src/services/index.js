@@ -10,6 +10,7 @@ import { media } from './media/media.js'
 import { modules } from './modules/modules.js'
 import { lessons } from './lessons/lessons.js'
 import { user } from './users/users.js'
+import { passwordReset } from './password-reset/password-reset.js'
 export const services = app => {
   app.configure(donations)
 
@@ -34,6 +35,8 @@ export const services = app => {
   app.configure(lessons)
 
   app.configure(user)
+
+  app.configure(passwordReset)
 
   // All services will be registered here
 }
