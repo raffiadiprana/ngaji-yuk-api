@@ -16,6 +16,7 @@ import { UserService, getOptions } from './users.class.js'
 import { userPath, userMethods } from './users.shared.js'
 
 import { authorize } from '../../hooks/authorize.js'
+import { cascadeUserDelete } from '../../hooks/cascade-user-delete.js'
 
 export * from './users.class.js'
 export * from './users.schema.js'
@@ -49,7 +50,8 @@ export const user = app => {
       remove: []
     },
     after: {
-      all: []
+      all: [],
+      remove: [cascadeUserDelete()]
     },
     error: {
       all: []
