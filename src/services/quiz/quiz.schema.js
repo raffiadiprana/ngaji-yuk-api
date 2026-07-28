@@ -34,7 +34,8 @@ export const quizDataSchema = Type.Object(
     media_id: Type.Optional(Type.Number()),
     created_by: Type.Number(),
     type: Type.Optional(Type.String()),
-    answer_type: Type.Optional(Type.String())
+    answer_type: Type.Optional(Type.String()),
+    is_completed: Type.Optional(Type.Number())
   },
   { $id: 'QuizData', additionalProperties: false }
 )
