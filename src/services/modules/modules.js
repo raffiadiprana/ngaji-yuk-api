@@ -39,9 +39,9 @@ const moduleResolvers = {
     }
   },
   learningStatus: async (module, context) => {
-    const userId = context.params.query?.user_id
+    const authUser = context.params.user
+    const userId = authUser?.id || authUser?.userId || context.params.query?.user_id
     if (!userId) {
-      // tanpa user_id, anggap terbuka (reference) / default
       module.is_completed = false
       module.progress_percent = 0
       module.is_locked = false
