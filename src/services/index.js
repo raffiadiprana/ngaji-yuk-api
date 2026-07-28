@@ -11,6 +11,7 @@ import { modules } from './modules/modules.js'
 import { lessons } from './lessons/lessons.js'
 import { user } from './users/users.js'
 import { passwordReset } from './password-reset/password-reset.js'
+import { userProgress } from './user-progress/user-progress.js'
 export const services = app => {
   app.configure(donations)
 
@@ -37,6 +38,8 @@ export const services = app => {
   app.configure(user)
 
   app.configure(passwordReset)
+
+  app.configure(userProgress)
 
   // All services will be registered here
 }

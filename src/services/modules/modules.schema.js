@@ -13,6 +13,8 @@ export const modulesSchema = Type.Object(
     thumbnail: Type.String(),
     section_id: Type.Number(),
     instructor_id: Type.Number(),
+    category: Type.String(),
+    order_index: Type.Number(),
     created_date: Type.String({ format: 'date-time' }),
     updated_date: Type.String({ format: 'date-time' }),
     is_deleted: Type.Number()
@@ -31,7 +33,9 @@ export const modulesDataSchema = Type.Pick(modulesSchema, [
   'video_header_id',
   'thumbnail',
   'section_id',
-  'instructor_id'
+  'instructor_id',
+  'category',
+  'order_index'
 ], { $id: 'ModulesData' })
 
 
@@ -50,7 +54,7 @@ export const modulesPatchResolver = resolve({
 })
 
 // Schema for allowed query properties
-export const modulesQueryProperties = Type.Pick(modulesSchema, ['id', 'section_id','instructor_id','is_deleted'])
+export const modulesQueryProperties = Type.Pick(modulesSchema, ['id', 'section_id','instructor_id','category','order_index','is_deleted'])
 export const modulesQuerySchema = Type.Intersect(
   [
     querySyntax(modulesQueryProperties),
