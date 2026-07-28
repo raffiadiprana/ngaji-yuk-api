@@ -36,6 +36,23 @@ const moduleResolvers = {
         quiz.module_detail = null;
       }
     }
+  },
+  instructorDetail: async (quiz, context) => {
+    if (quiz.instructor_id) {
+      try {
+        const profileService = context.app.service('profiles');
+        const profiles = await profileService.find({
+          query: { user_id: quiz.instructor_id },
+          paginate: false
+        });
+        quiz.instructor_detail = profiles[0] || null;
+      } catch (error) {
+        console.error('Error fetching instructor detail', error);
+        quiz.instructor_detail = null;
+      }
+    } else {
+      quiz.instructor_detail = null;
+    }
   }
 };
 
@@ -68,10 +85,12 @@ export const quiz = app => {
     },
     after: {
       find: [
-        alterItems(moduleResolvers.moduleDetail)  // 🔥 pindah ke AFTER.FIND
+        alterItems(moduleResolvers.moduleDetail),
+        alterItems(moduleResolvers.instructorDetail)
       ],
       get: [
-        alterItems(moduleResolvers.moduleDetail)  // 🔥 juga di AFTER.GET
+        alterItems(moduleResolvers.moduleDetail),
+        alterItems(moduleResolvers.instructorDetail)
       ],
       all: []
     },
