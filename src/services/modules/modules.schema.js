@@ -66,7 +66,7 @@ export const modulesPatchResolver = resolve({
 })
 
 // Schema for allowed query properties
-export const modulesQueryProperties = Type.Pick(modulesSchema, ['id', 'section_id','instructor_id','category','order_index','is_deleted'])
+export const modulesQueryProperties = Type.Pick(modulesSchema, ['id', 'section_id','instructor_id','category','order_index','is_deleted','is_draft'])
 export const modulesQuerySchema = Type.Intersect(
   [
     querySyntax(modulesQueryProperties),
