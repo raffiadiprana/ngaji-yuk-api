@@ -10,7 +10,7 @@ export const quizSchema = Type.Object(
     modules_id: Type.Number(),
     type: Type.String(),
     question: Type.String(),
-    media_id: Type.String(),
+    media_id: Type.Optional(Type.Number()),
     answer_type: Type.String(),
     created_by: Type.Number(),
     created_date: Type.String({ format: 'date-time' }),
@@ -31,7 +31,7 @@ export const quizDataSchema = Type.Object(
   {
     modules_id: Type.Number(),
     question: Type.String(),
-    media_id: Type.Optional(Type.String()),
+    media_id: Type.Optional(Type.Number()),
     created_by: Type.Number(),
     type: Type.Optional(Type.String()),
     answer_type: Type.Optional(Type.String())
