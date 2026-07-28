@@ -17,7 +17,13 @@ export const modulesSchema = Type.Object(
     order_index: Type.Number(),
     created_date: Type.String({ format: 'date-time' }),
     updated_date: Type.String({ format: 'date-time' }),
-    is_deleted: Type.Number()
+    is_deleted: Type.Number(),
+    arabic_text: Type.String(),
+    transliteration: Type.String(),
+    meaning: Type.String(),
+    ghunnah: Type.Boolean(),
+    duration: Type.Number(),
+    is_draft: Type.Number()
   },
   { $id: 'Modules', additionalProperties: false }
 )
@@ -35,7 +41,13 @@ export const modulesDataSchema = Type.Pick(modulesSchema, [
   'section_id',
   'instructor_id',
   'category',
-  'order_index'
+  'order_index',
+  'arabic_text',
+  'transliteration',
+  'meaning',
+  'ghunnah',
+  'duration',
+  'is_draft'
 ], { $id: 'ModulesData' })
 
 
