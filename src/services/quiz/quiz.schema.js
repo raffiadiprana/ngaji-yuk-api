@@ -24,12 +24,16 @@ export const quizResolver = resolve({})
 export const quizExternalResolver = resolve({})
 
 // Schema for creating new entries
-export const quizDataSchema = Type.Pick(quizSchema, [
-  'modules_id',
-  'question',
-  'media_id',
-  'created_by'
-], { $id: 'QuizData' })
+// media_id dijadikan optional karena chat bisa dimulai tanpa media (voice/text)
+export const quizDataSchema = Type.Object(
+  {
+    modules_id: Type.Number(),
+    question: Type.String(),
+    media_id: Type.Optional(Type.String()),
+    created_by: Type.Number()
+  },
+  { $id: 'QuizData', additionalProperties: false }
+)
 
 
 export const quizDataValidator = getValidator(quizDataSchema, dataValidator)
