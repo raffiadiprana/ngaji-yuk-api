@@ -25,7 +25,7 @@ export const quizExternalResolver = resolve({})
 
 // Schema for creating new entries
 export const quizDataSchema = Type.Pick(quizSchema, [
-  'module_id',
+  'modules_id',
   'question',
   'media_id',
   'created_by'
