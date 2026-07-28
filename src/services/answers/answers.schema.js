@@ -27,11 +27,10 @@ export const answersResolver = resolve({})
 export const answersExternalResolver = resolve({})
 
 // Schema for creating new entries
+// instructor_id & reply_to dihapus dari required karena kolom tidak ada di tabel answers (DB)
 export const answersDataSchema = Type.Pick(answersSchema, [
   'quiz_id',
   'user_id',
-  'instructor_id',
-  'reply_to',
   'answer_type',
   'answer_value',
   'is_passed',
