@@ -7,7 +7,8 @@ import { dataValidator, queryValidator } from '../../validators.js'
 export const sectionsSchema = Type.Object(
   {
     id: Type.Number(),
-    section_name: Type.String()
+    section_name: Type.String(),
+    order_index: Type.Number()
   },
   { $id: 'Sections', additionalProperties: false }
 )
@@ -32,6 +33,7 @@ export const sectionsPatchResolver = resolve({})
 
 export const sectionsQueryProperties = Type.Object({
   id: Type.Optional(Type.Number()),
+  order_index: Type.Optional(Type.Number()),
   section_name: Type.Union([
     Type.String(),
     Type.Object({ $like: Type.String() })
