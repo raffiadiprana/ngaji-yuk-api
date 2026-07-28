@@ -13,6 +13,7 @@ export const quizSchema = Type.Object(
     media_id: Type.Optional(Type.Number()),
     answer_type: Type.String(),
     created_by: Type.Number(),
+    instructor_id: Type.Optional(Type.Number()),
     created_date: Type.String({ format: 'date-time' }),
     updated_date: Type.String({ format: 'date-time' }),
     is_deleted: Type.Number()
@@ -30,10 +31,11 @@ export const quizExternalResolver = resolve({})
 export const quizDataSchema = Type.Object(
   {
     modules_id: Type.Number(),
+    type: Type.String(),
     question: Type.String(),
     media_id: Type.Optional(Type.Number()),
     created_by: Type.Number(),
-    type: Type.Optional(Type.String()),
+    instructor_id: Type.Optional(Type.Number()),
     answer_type: Type.Optional(Type.String()),
     is_completed: Type.Optional(Type.Number())
   },
