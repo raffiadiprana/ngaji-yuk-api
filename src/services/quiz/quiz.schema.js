@@ -25,12 +25,16 @@ export const quizExternalResolver = resolve({})
 
 // Schema for creating new entries
 // media_id dijadikan optional karena chat bisa dimulai tanpa media (voice/text)
+// created_by wajib (dicatat ke kolom quiz.created_by lewat migration)
+// type & answer_type optional (chat bisa tanpa keduanya)
 export const quizDataSchema = Type.Object(
   {
     modules_id: Type.Number(),
     question: Type.String(),
     media_id: Type.Optional(Type.String()),
-    created_by: Type.Number()
+    created_by: Type.Number(),
+    type: Type.Optional(Type.String()),
+    answer_type: Type.Optional(Type.String())
   },
   { $id: 'QuizData', additionalProperties: false }
 )
