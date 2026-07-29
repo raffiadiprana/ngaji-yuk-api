@@ -1,7 +1,16 @@
 import { KnexService } from '@feathersjs/knex'
 
-// By default calls the standard Knex adapter service methods but can be customized with your own functionality.
-export class DonationsService extends KnexService {}
+export class DonationsService extends KnexService {
+  async find (params) {
+    const userId = params?.user?.id ?? params?.userId ?? null
+    const query = this._buildQuery(params)
+    if (userId != null) {
+      query.where('user_id', userId)
+    }
+    const data = await this._executeQuery(query, params, false)
+    return this._formatResult(data, params)
+  }
+}
 
 export const getOptions = app => {
   return {
