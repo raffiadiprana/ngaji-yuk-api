@@ -1,5 +1,3 @@
-import { knex } from '../../src/config/database.js'
-
 export async function up(knex) {
   return knex.schema.createTable('donations', (table) => {
     table.increments('id').primary()
