@@ -25,7 +25,7 @@ export const modulesSchema = Type.Object(
     duration: Type.Number(),
     is_draft: Type.Number(),
     marked_ayah: Type.String(),
-    highlight_words: Type.Array(Type.String()),
+    highlight_words: Type.Union([Type.Array(Type.String()), Type.String(), Type.Null()]),
     voice_note_url: Type.String()
   },
   { $id: 'Modules', additionalProperties: false }
