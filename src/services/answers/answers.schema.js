@@ -54,13 +54,18 @@ export const answersPatchResolver = resolve({
 
 // Schema for allowed query properties
 export const answersQueryProperties = Type.Pick(answersSchema, ['id', 'quiz_id','user_id','instructor_id','reply_to','is_passed','created_date'])
+
 export const answersQuerySchema = Type.Intersect(
   [
     querySyntax(answersQueryProperties),
-    // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    // Relaxed to accept Feathers nested query operators like `$or`
+    Type.Object({
+      '$or': Type.Array(Type.Any()),
+      '$and': Type.Array(Type.Any()),
+      '$nor': Type.Array(Type.Any())
+    }, { additionalProperties: true })
   ],
-  { additionalProperties: false }
+  { additionalProperties: true }
 )
 export const answersQueryValidator = getValidator(answersQuerySchema, queryValidator)
 export const answersQueryResolver = resolve({})
