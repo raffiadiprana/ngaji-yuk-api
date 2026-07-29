@@ -1,17 +1,15 @@
-'use strict';
+export async function up(knex) {
+  await knex.schema.alterTable('modules', table => {
+    table.text('marked_ayah').nullable();
+    table.jsonb('highlight_words').nullable();
+    table.string('voice_note_url').nullable();
+  });
+}
 
-module.exports = {
-  up: async ( knex ) => {
-    await knex.schema.alterTable( 'modules', ( table ) => {
-      table.text( 'marked_ayah' ).nullable();
-      table.jsonb( 'highlight_words' ).nullable();
-    } );
-  },
-
-  down: async ( knex ) => {
-    await knex.schema.alterTable( 'modules', ( table ) => {
-      table.dropColumn( 'marked_ayah' );
-      table.dropColumn( 'highlight_words' );
-    } );
-  }
-};
+export async function down(knex) {
+  await knex.schema.alterTable('modules', table => {
+    table.dropColumn('marked_ayah');
+    table.dropColumn('highlight_words');
+    table.dropColumn('voice_note_url');
+  });
+}
