@@ -23,16 +23,17 @@ export const modulesSchema = Type.Object(
     meaning: Type.String(),
     ghunnah: Type.Boolean(),
     duration: Type.Number(),
-    is_draft: Type.Number()
+    is_draft: Type.Number(),
+    marked_ayah: Type.String(),
+    highlight_words: Type.Array(Type.String()),
+    voice_note_url: Type.String()
   },
   { $id: 'Modules', additionalProperties: false }
 )
 export const modulesValidator = getValidator(modulesSchema, dataValidator)
 export const modulesResolver = resolve({})
-
 export const modulesExternalResolver = resolve({})
 
-// Schema for creating new entries
 export const modulesDataSchema = Type.Pick(modulesSchema, [
   'title',
   'description',
@@ -47,7 +48,10 @@ export const modulesDataSchema = Type.Pick(modulesSchema, [
   'meaning',
   'ghunnah',
   'duration',
-  'is_draft'
+  'is_draft',
+  'marked_ayah',
+  'highlight_words',
+  'voice_note_url'
 ], { $id: 'ModulesData' })
 
 
