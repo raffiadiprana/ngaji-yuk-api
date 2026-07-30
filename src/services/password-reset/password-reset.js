@@ -12,7 +12,7 @@ export class PasswordReset {
 
   async create (data, params) {
     const { email, newPassword, step } = data || {}
-    const knex = this.app.get('mysqlClient')
+    const knex = this.app.get('postgresql')
 
     if (!email) {
       throw new Error('Email wajib diisi')

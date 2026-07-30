@@ -6,7 +6,7 @@ export class ProfilesService extends KnexService {}
 export const getOptions = app => {
   return {
     paginate: app.get('paginate'),
-    Model: app.get('mysqlClient'),
+    Model: app.get('postgresql'),
     name: 'profiles'
   }
 }

@@ -16,5 +16,5 @@ export const postgresql = app => {
 
   const db = knex(config)
 
-  app.set('mysqlClient', db)
+  app.set('postgresql', db)
 }

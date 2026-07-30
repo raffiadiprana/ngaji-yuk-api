@@ -47,7 +47,7 @@ const moduleResolvers = {
       module.is_locked = false
       return
     }
-    const knex = context.app.get('mysqlClient')
+    const knex = context.app.get('postgresql')
     try {
       // cek apakah modul ini punya quiz yang is_completed=1 oleh user ini
       const quizRows = await knex('quiz')
