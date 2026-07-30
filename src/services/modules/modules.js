@@ -123,9 +123,12 @@ export const modules = app => {
         schemaHooks.validateData(modulesDataValidator),
         schemaHooks.resolveData(modulesDataResolver),
         async (context) => {
-          if ('highlight_words' in context.data && context.data.highlight_words != null) {
-            const v = context.data.highlight_words
-            context.data.highlight_words = Array.isArray(v) ? v : (typeof v === 'string' ? JSON.parse(v) : [v].filter(Boolean))
+          const d = context.data
+          if ('highlight_words' in d && d.highlight_words != null) {
+            const v = d.highlight_words
+            d.highlight_words = Array.isArray(v) ? v.map(x => String(x)) : (typeof v === 'string' ? (v.trim() === '' ? null : JSON.parse(v)) : null)
+          } else {
+            d.highlight_words = null
           }
           return context
         }
@@ -134,9 +137,12 @@ export const modules = app => {
         schemaHooks.validateData(modulesPatchValidator),
         schemaHooks.resolveData(modulesPatchResolver),
         async (context) => {
-          if ('highlight_words' in context.data && context.data.highlight_words != null) {
-            const v = context.data.highlight_words
-            context.data.highlight_words = Array.isArray(v) ? v : (typeof v === 'string' ? JSON.parse(v) : [v].filter(Boolean))
+          const d = context.data
+          if ('highlight_words' in d && d.highlight_words != null) {
+            const v = d.highlight_words
+            d.highlight_words = Array.isArray(v) ? v.map(x => String(x)) : (typeof v === 'string' ? (v.trim() === '' ? null : JSON.parse(v)) : null)
+          } else {
+            d.highlight_words = null
           }
           return context
         }
