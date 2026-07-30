@@ -121,17 +121,24 @@ export const modules = app => {
       get: [],
       create: [
         schemaHooks.validateData(modulesDataValidator),
-        schemaHooks.resolveData(modulesDataResolver)
+        schemaHooks.resolveData(modulesDataResolver),
+        async (context) => {
+          if ('highlight_words' in context.data && context.data.highlight_words != null) {
+            const v = context.data.highlight_words
+            context.data.highlight_words = Array.isArray(v) ? v : (typeof v === 'string' ? JSON.parse(v) : [v].filter(Boolean))
+          }
+          return context
+        }
       ],
       patch: [
         schemaHooks.validateData(modulesPatchValidator),
         schemaHooks.resolveData(modulesPatchResolver),
         async (context) => {
           if ('highlight_words' in context.data && context.data.highlight_words != null) {
-            const v = context.data.highlight_words;
-            context.data.highlight_words = Array.isArray(v) ? v : (typeof v === 'string' ? JSON.parse(v) : [v].filter(Boolean));
+            const v = context.data.highlight_words
+            context.data.highlight_words = Array.isArray(v) ? v : (typeof v === 'string' ? JSON.parse(v) : [v].filter(Boolean))
           }
-          return context;
+          return context
         }
       ],
       remove: []
