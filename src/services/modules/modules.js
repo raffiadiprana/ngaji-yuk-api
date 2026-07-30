@@ -52,28 +52,6 @@ const moduleResolvers = {
       module.is_completed = false
       module.progress_percent = 0
 
-      //关卡系统: module pertama setiap kategori selalu terbuka untuk new user
-      const rows = await knex('modules').where({ category: module.category, is_deleted: 0 }).orderBy('order_index', 'asc')
-      const firstModuleId = rows[0]?.id || null
-      const isFirstOrUnknown = firstModuleId === null || module.id === firstModuleId
-
-      if (isFirstOrUnknown) {
-        module.is_locked = false
-        return
-      }
-
-      //关卡系统: core N terbuka kalau core N-1 selesai
-      const prev = rows.find(r => r.order_index === module.order_index - 1)
-      if (!prev) {
-        module.is_locked = false
-        return
-      }
-      const prevQuiz = await knex('quiz').where({ modules_id: prev.id, created_by: userId, is_completed: 1, is_deleted: 0 })
-      module.is_locked = prevQuiz.length === 0
-
-      // fallback: jika quiz untuk module lain belum ada sama sekali, buka module pertama
-      const anyQuiz = await knex('quiz').where({ created_by: userId, is_completed: 1, is_deleted: 0 }).first()
-      if (!anyQuiz && module.category === 'core' && rows[0] && module.id === rows[0].id) module.is_locked = false
     } catch (err) {
       console.error('Error computing learning status:', err.message)
       module.is_completed = false
