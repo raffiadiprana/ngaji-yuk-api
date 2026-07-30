@@ -125,16 +125,16 @@ export const modules = app => {
         async (context) => {
           const d = context.data
           if (d.highlight_words === undefined || d.highlight_words === null || d.highlight_words === '' ) {
-            d.highlight_words = []
+            d.highlight_words = '[]'
           } else if (typeof d.highlight_words === 'string') {
-            try { d.highlight_words = JSON.parse(d.highlight_words) }
-            catch { d.highlight_words = [] }
+            try { d.highlight_words = JSON.stringify(JSON.parse(d.highlight_words)) }
+            catch { d.highlight_words = '[]' }
           } else if (!Array.isArray(d.highlight_words)) {
-            d.highlight_words = []
+            d.highlight_words = '[]'
           } else {
-            d.highlight_words = d.highlight_words.map(x => String(x))
+            d.highlight_words = JSON.stringify(d.highlight_words.map(x => String(x)))
           }
-          console.log('[modules.create] normalized highlight_words:', JSON.stringify(d.highlight_words))
+          console.log('[modules.create] normalized highlight_words:', d.highlight_words)
           return context
         }
       ],
