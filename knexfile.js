@@ -5,6 +5,13 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function resolveDbConfig() {
+  const envUrl = process.env.DATABASE_URL
+  if (envUrl) {
+    return {
+      client: process.env.PG_CLIENT || 'pg',
+      connection: envUrl
+    }
+  }
   const candidates = [
     path.resolve(__dirname, 'config', 'default.json'),
     path.resolve(__dirname, 'config/default.json')
@@ -22,7 +29,7 @@ function resolveDbConfig() {
   }
   return {
     client: process.env.PG_CLIENT || 'pg',
-    connection: process.env.DATABASE_URL || ''
+    connection: ''
   }
 }
 
