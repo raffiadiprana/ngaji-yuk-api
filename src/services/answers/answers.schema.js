@@ -58,11 +58,11 @@ export const answersQueryProperties = Type.Pick(answersSchema, ['id', 'quiz_id',
 export const answersQuerySchema = Type.Intersect(
   [
     querySyntax(answersQueryProperties),
-    // Relaxed to accept Feathers nested query operators like `$or`
+    // Relaxed to accept Feathers nested query operators like `$or`, `$and`, `$nor`
     Type.Object({
-      '$or': Type.Array(Type.Any()),
-      '$and': Type.Array(Type.Any()),
-      '$nor': Type.Array(Type.Any())
+      '$or': Type.Optional(Type.Array(Type.Any())),
+      '$and': Type.Optional(Type.Array(Type.Any())),
+      '$nor': Type.Optional(Type.Array(Type.Any()))
     }, { additionalProperties: true })
   ],
   { additionalProperties: true }
