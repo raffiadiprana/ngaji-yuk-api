@@ -36,7 +36,7 @@
   "main": "src/client",
   "type": "module",
   "scripts": {
-    "start": "node src",
+    "start": "npm run migrate && node src",
     "dev": "nodemon src/",
     "prettier": "npx prettier \"**/*.js\" --write",
     "mocha": "cross-env NODE_ENV=test mocha test/ --recursive --exit",
