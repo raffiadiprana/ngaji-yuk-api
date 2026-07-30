@@ -15,10 +15,42 @@ import {
 import { AnswersService, getOptions } from './answers.class.js'
 import { answersPath, answersMethods } from './answers.shared.js'
 
-export * from './answers.class.js'
-export * from './answers.schema.js'
+import { authorize } from '../../hooks/authorize.js'
 
 import { fastJoin, alterItems } from 'feathers-hooks-common'
+
+const knexRef = () => app.get('postgresql')
+
+app.use('/answers/inbox', {
+  async create(data, params) {
+    const instructorId = Number(data?.instructor_id || params?.query?.instructor_id)
+    if (!instructorId || isNaN(instructorId)) {
+      throw new Error('instructor_id is required')
+    }
+    const mods = await knexRef()('modules').where({ instructor_id: instructorId, is_deleted: 0 }).select('id')
+    const quizIds = [...new Set(mods.map(m => m.id).filter(Boolean))]
+    if (!quizIds.length) return []
+    const rows = await knexRef()('answers').whereIn('quiz_id', quizIds).orderBy('created_date', 'desc').limit(200)
+    const grouped = {}
+    for (const row of rows) {
+      const key = row.quiz_id
+      if (!grouped[key]) grouped[key] = { quiz_id: key, count: 0, lastAnswer: row }
+      grouped[key].count += 1
+      const current = grouped[key].lastAnswer
+      const currentDate = typeof current.created_date === 'string' ? new Date(current.created_date).valueOf() : current.created_date
+      const rowDate = typeof row.created_date === 'string' ? new Date(row.created_date).valueOf() : row.created_date
+      if (rowDate > currentDate) grouped[key].lastAnswer = row
+    }
+    return Object.values(grouped).sort((a, b) => b.lastAnswer.created_date - a.lastAnswer.created_date)
+  }
+})
+
+// Protect custom route with JWT
+app.service('/answers/inbox').hooks({
+  around: {
+    all: [authenticate('jwt')]
+  }
+})
 
 const userResolvers = {
   userDetail: async (answer, context) => {
