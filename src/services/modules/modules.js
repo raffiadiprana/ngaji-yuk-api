@@ -124,12 +124,17 @@ export const modules = app => {
         schemaHooks.resolveData(modulesDataResolver),
         async (context) => {
           const d = context.data
-          if ('highlight_words' in d && d.highlight_words != null) {
-            const v = d.highlight_words
-            d.highlight_words = Array.isArray(v) ? v.map(x => String(x)) : (typeof v === 'string' ? (v.trim() === '' ? null : JSON.parse(v)) : null)
+          if (d.highlight_words === undefined || d.highlight_words === null || d.highlight_words === '' ) {
+            d.highlight_words = []
+          } else if (typeof d.highlight_words === 'string') {
+            try { d.highlight_words = JSON.parse(d.highlight_words) }
+            catch { d.highlight_words = [] }
+          } else if (!Array.isArray(d.highlight_words)) {
+            d.highlight_words = []
           } else {
-            d.highlight_words = null
+            d.highlight_words = d.highlight_words.map(x => String(x))
           }
+          console.log('[modules.create] normalized highlight_words:', JSON.stringify(d.highlight_words))
           return context
         }
       ],
@@ -138,12 +143,19 @@ export const modules = app => {
         schemaHooks.resolveData(modulesPatchResolver),
         async (context) => {
           const d = context.data
-          if ('highlight_words' in d && d.highlight_words != null) {
-            const v = d.highlight_words
-            d.highlight_words = Array.isArray(v) ? v.map(x => String(x)) : (typeof v === 'string' ? (v.trim() === '' ? null : JSON.parse(v)) : null)
-          } else {
-            d.highlight_words = null
+          if ('highlight_words' in d) {
+            if (d.highlight_words === undefined || d.highlight_words === null || d.highlight_words === '' ) {
+              d.highlight_words = []
+            } else if (typeof d.highlight_words === 'string') {
+              try { d.highlight_words = JSON.parse(d.highlight_words) }
+              catch { d.highlight_words = [] }
+            } else if (!Array.isArray(d.highlight_words)) {
+              d.highlight_words = []
+            } else {
+              d.highlight_words = d.highlight_words.map(x => String(x))
+            }
           }
+          console.log('[modules.patch] normalized highlight_words:', JSON.stringify(d.highlight_words))
           return context
         }
       ],
