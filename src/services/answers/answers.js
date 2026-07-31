@@ -19,45 +19,45 @@ import { authorize } from '../../hooks/authorize.js'
 
 import { fastJoin, alterItems } from 'feathers-hooks-common'
 
-const knexRef = () => app.get('postgresql')
-
-const userResolvers = {
-  userDetail: async (answer, context) => {
-    if (answer.user_id) {
-      try {
-        const moduleService = context.app.service('profiles');
-        const modules = await moduleService.find({
-          query: { user_id: answer.user_id },
-          paginate: false
-        });
-        answer.user_detail = modules[0] || null;
-      } catch (error) {
-        console.error('Error fetching module detail', error);
-        answer.module_detail = null;
-      }
-    }
-  }
-};
-
-const quizResolvers = {
-  quizDetail: async (answer, context) => {
-    if (answer.quiz_id) {
-      try {
-        const quizService = context.app.service('quiz');
-        const quiz = await quizService.find({
-          query: { id: answer.quiz_id },
-          paginate: false
-        });
-        answer.quiz_detail = quiz[0] || null;
-      } catch (error) {
-        console.error('Error fetching quiz detail', error);
-        answer.quiz_detail = null;
-      }
-    }
-  }
-};
-
 export const answers = app => {
+  const knexRef = () => app.get('postgresql')
+
+  const userResolvers = {
+    userDetail: async (answer, context) => {
+      if (answer.user_id) {
+        try {
+          const moduleService = context.app.service('profiles');
+          const modules = await moduleService.find({
+            query: { user_id: answer.user_id },
+            paginate: false
+          });
+          answer.user_detail = modules[0] || null;
+        } catch (error) {
+          console.error('Error fetching module detail', error);
+          answer.module_detail = null;
+        }
+      }
+    }
+  };
+
+  const quizResolvers = {
+    quizDetail: async (answer, context) => {
+      if (answer.quiz_id) {
+        try {
+          const quizService = context.app.service('quiz');
+          const quiz = await quizService.find({
+            query: { id: answer.quiz_id },
+            paginate: false
+          });
+          answer.quiz_detail = quiz[0] || null;
+        } catch (error) {
+          console.error('Error fetching quiz detail', error);
+          answer.quiz_detail = null;
+        }
+      }
+    }
+  };
+
   app.use('/answers/inbox', {
     async create(data, params) {
       const instructorId = Number(data?.instructor_id || params?.query?.instructor_id)
