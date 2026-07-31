@@ -31,8 +31,10 @@ export const answersExternalResolver = resolve({})
 export const answersDataSchema = Type.Pick(answersSchema, [
   'quiz_id',
   'user_id',
+  'instructor_id',
   'answer_type',
   'answer_value',
+  'highlight_words',
   'is_passed',
   'score',
   'review_notes'
