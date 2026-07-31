@@ -31,7 +31,6 @@ export const answersExternalResolver = resolve({})
 export const answersDataSchema = Type.Pick(answersSchema, [
   'quiz_id',
   'user_id',
-  'instructor_id',
   'answer_type',
   'answer_value',
   'highlight_words',
@@ -39,8 +38,10 @@ export const answersDataSchema = Type.Pick(answersSchema, [
   'score',
   'review_notes'
 ])
-
-export const answersDataValidator = getValidator(answersDataSchema, dataValidator)
+export const answersDataValidator = getValidator(
+  Type.Partial(answersDataSchema, { required: ['quiz_id', 'user_id', 'answer_type', 'answer_value'] }),
+  dataValidator
+)
 export const answersDataResolver = resolve({
   created_date: async () => new Date().toLocaleString('sv-SE')
 })
