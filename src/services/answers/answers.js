@@ -68,8 +68,16 @@ export const answers = app => {
       const quizIds = [...new Set(mods.map(m => m.id).filter(Boolean))]
       if (!quizIds.length) return []
       const rows = await knexRef()('answers').whereIn('quiz_id', quizIds).orderBy('created_date', 'desc').limit(200)
+      const userIds = [...new Set(rows.map(r => r.user_id).filter(Boolean))]
+      const moduleIds = [...new Set(rows.map(r => r.quiz_id).filter(Boolean))]
+      const users = userIds.length ? await knexRef()('users').whereIn('id', userIds).select('id', 'display_name', 'user_role') : []
+      const modules = moduleIds.length ? await knexRef()('modules').whereIn('id', moduleIds).select('id', 'title', 'instructor_id') : []
+      const userMap = Object.fromEntries(users.map(u => [u.id, u]))
+      const moduleMap = Object.fromEntries(modules.map(m => [m.id, m]))
       const grouped = {}
       for (const row of rows) {
+        row.user_detail = userMap[row.user_id] || null
+        row.quiz_detail = { module_detail: moduleMap[row.quiz_id] || null }
         const key = row.quiz_id
         if (!grouped[key]) grouped[key] = { quiz_id: key, count: 0, lastAnswer: row }
         grouped[key].count += 1
