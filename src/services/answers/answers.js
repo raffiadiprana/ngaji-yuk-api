@@ -70,7 +70,7 @@ export const answers = app => {
       const rows = await knexRef()('answers').whereIn('quiz_id', quizIds).orderBy('created_date', 'desc').limit(200)
       const userIds = [...new Set(rows.map(r => r.user_id).filter(Boolean))]
       const moduleIds = [...new Set(rows.map(r => r.quiz_id).filter(Boolean))]
-      const users = userIds.length ? await knexRef()('users').whereIn('id', userIds).select('id', 'display_name', 'user_role') : []
+      const users = userIds.length ? await knexRef()('users').whereIn('id', userIds).select('id', 'email', 'role') : []
       const modules = moduleIds.length ? await knexRef()('modules').whereIn('id', moduleIds).select('id', 'title', 'instructor_id') : []
       const userMap = Object.fromEntries(users.map(u => [u.id, u]))
       const moduleMap = Object.fromEntries(modules.map(m => [m.id, m]))
