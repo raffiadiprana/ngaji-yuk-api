@@ -11,6 +11,7 @@ export const userSchema = Type.Object(
     email: Type.String(),
     password: Type.Optional(Type.String()),
     role: Type.String(),
+    username: Type.Optional(Type.String()),
     created_date: Type.String({ format: 'date-time' }),
     updated_date: Type.String({ format: 'date-time' })
   },
@@ -25,7 +26,7 @@ export const userExternalResolver = resolve({
 })
 
 // Schema for creating new entries
-export const userDataSchema = Type.Pick(userSchema, ['email', 'password','role'], {
+export const userDataSchema = Type.Pick(userSchema, ['email', 'password','role','username'], {
   $id: 'UserData'
 })
 export const userDataValidator = getValidator(userDataSchema, dataValidator)
@@ -45,7 +46,7 @@ export const userPatchResolver = resolve({
 })
 
 // Schema for allowed query properties
-export const userQueryProperties = Type.Pick(userSchema, ['id', 'email','role'])
+export const userQueryProperties = Type.Pick(userSchema, ['id', 'email','role','username'])
 export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),

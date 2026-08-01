@@ -111,7 +111,10 @@ export const modules = app => {
           } else {
             d.highlight_words = JSON.stringify(d.highlight_words.map(x => String(x)))
           }
-          console.log('[modules.create] normalized highlight_words:', d.highlight_words)
+          if (!d.instructor_id && context.params?.user?.id) {
+            d.instructor_id = context.params.user.id
+          }
+          console.log('[modules.create] normalized highlight_words:', d.highlight_words, 'instructor_id:', d.instructor_id)
           return context
         }
       ],

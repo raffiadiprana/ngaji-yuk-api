@@ -45,7 +45,17 @@ export const user = app => {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
+      create: [
+        schemaHooks.validateData(userDataValidator),
+        schemaHooks.resolveData(userDataResolver),
+        async (context) => {
+          if (!context.data?.username && context.data?.email) {
+            const base = String(context.data.email).split('@')[0].replace(/[^a-z0-9_]/gi, '')
+            context.data.username = base || context.data.email
+          }
+          return context
+        }
+      ],
       patch: [schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver)],
       remove: []
     },
