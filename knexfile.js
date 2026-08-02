@@ -35,9 +35,21 @@ function resolveDbConfig() {
 
 const db = resolveDbConfig()
 
+function addSslIfNeeded(conn) {
+  if (!conn || typeof conn !== 'string') return conn
+  const needSsl = ['true', '1', 'yes'].includes(String(process.env.DATABASE_SSL || process.env.PG_SSL || '').toLowerCase())
+  if (!needSsl) return conn
+  const hasSsl = /[?&]sslmode=/.test(conn)
+  const hasPgbouncer = /[?&]pgbouncer=/.test(conn)
+  if (hasSsl) return conn
+  const sep = conn.includes('?') ? '&' : '?'
+  const suffix = `${sep}sslmode=require${hasPgbouncer ? '' : '&pgbouncer=true'}`
+  return conn + suffix
+}
+
 export default {
   client: db.client || 'pg',
-  connection: db.connection,
+  connection: addSslIfNeeded(db.connection),
   migrations: {
     directory: path.resolve(__dirname, 'migrations')
   }
