@@ -9,5 +9,7 @@
   },
   "authentication": {
     "secret": "FEATHERS_SECRET"
-  }
+  },
+  "supabaseUrl": "SUPABASE_URL",
+  "supabaseServiceRoleKey": "SUPABASE_SERVICE_ROLE_KEY"
 }

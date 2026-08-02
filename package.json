@@ -61,6 +61,7 @@
     "@feathersjs/socketio": "^5.0.33",
     "@feathersjs/transport-commons": "^5.0.33",
     "@feathersjs/typebox": "^5.0.33",
+    "@supabase/supabase-js": "^2.49.1",
     "compression": "^1.8.0",
     "feathers-hooks-common": "^8.2.1",
     "knex": "^3.1.0",

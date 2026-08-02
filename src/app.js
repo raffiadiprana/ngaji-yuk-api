@@ -21,6 +21,7 @@ import { authentication } from './authentication.js'
 import { services } from './services/index.js'
 import { channels } from './channels.js'
 import { fileUploadMiddleware } from './middleware/file-upload.js'
+import { uploadToSupabase } from './supabaseStorage.js'
 
 const app = express(feathers())
 
@@ -31,6 +32,22 @@ app.configure(configuration(configurationValidator))
 app.use(cors())
 app.use('/', serveStatic(app.get('public')))
 app.use('/uploads', express.static(path.resolve('uploads')))  // expose uploaded files
+app.use('/uploads/:filename', async (req, res, next) => {
+  try {
+    const filename = decodeURIComponent(req.params.filename)
+    const client = getSupabaseStorageClient()
+    if (!client) return next()
+
+    const bucket = 'ngaji-yuk-uploads'
+    const { data, error } = client.storage.from(bucket).createSignedUrl(filename, 60)
+    if (!error && data?.signedUrl) {
+      return res.redirect(data.signedUrl)
+    }
+    next()
+  } catch (err) {
+    next()
+  }
+})
 
 // Register manual POST /uploads middleware BEFORE json/urlencoded
 //    This is important so multer works before body-parser eats the body
@@ -42,18 +59,11 @@ app.post('/uploads', fileUploadMiddleware, async (req, res, next) => {
       return res.status(400).json({ message: 'No file uploaded' })
     }
 
-    const fileInfo = {
-      filename: req.file.filename,
-      originalname: req.file.originalname,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-      path: req.file.path
-    }
-
-    const result = await app.service('uploads').create(fileInfo)
+    const result = await uploadToSupabase(req.file.path, req.file.mimetype)
 
     res.status(201).json(result)  // 201 Created
   } catch (err) {
+    console.error('[UPLOAD] failed', err)
     next(err)
   }
 })
