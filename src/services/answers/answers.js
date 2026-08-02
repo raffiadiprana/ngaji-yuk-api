@@ -26,26 +26,17 @@ export const answers = app => {
     userDetail: async (answer, context) => {
       if (answer.user_id) {
         try {
-          const profileService = context.app.service('profiles');
-          const profiles = await profileService.find({
-            query: { user_id: answer.user_id },
-            paginate: false
-          });
-          const profile = profiles[0] || null;
-
           const userRows = await context.app.get('postgresql')('users')
             .where('id', answer.user_id)
             .select('id', 'username', 'email', 'role')
-            .limit(1);
-          const user = userRows[0] || null;
-
-          answer.user_detail = {
-            ...(user || {}),
-            ...(profile || {})
-          };
+            .limit(1)
+          const user = userRows[0] || null
+          answer.user_detail = user
+            ? { id: user.id, username: user.username || null, email: user.email || null, role: user.role || null }
+            : { id: answer.user_id, username: null, email: null, role: null }
         } catch (error) {
-          console.error('Error fetching user detail', error);
-          answer.user_detail = null;
+          console.error('Error fetching user detail', error)
+          answer.user_detail = { id: answer.user_id, username: null, email: null, role: null }
         }
       }
     }
