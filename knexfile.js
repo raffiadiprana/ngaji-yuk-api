@@ -46,6 +46,10 @@ function addSslIfNeeded(conn) {
   return { connectionString: connWithSsl, ssl: { rejectUnauthorized: false } }
 }
 
+if (['true', '1', 'yes'].includes(String(process.env.DATABASE_SSL || process.env.PG_SSL || '').toLowerCase())) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+}
+
 export default {
   client: db.client || 'pg',
   connection: addSslIfNeeded(db.connection),
