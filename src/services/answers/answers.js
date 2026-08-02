@@ -87,7 +87,13 @@ export const answers = app => {
       const moduleMap = Object.fromEntries(modules.map(m => [m.id, m]))
       const grouped = {}
       for (const row of rows) {
-        row.user_detail = userMap[row.user_id] || null
+        const rawUser = userMap[row.user_id] || null
+        row.user_detail = rawUser ? {
+          id: rawUser.id,
+          username: rawUser.username || null,
+          email: rawUser.email || null,
+          role: rawUser.role || null
+        } : null
         row.quiz_detail = { module_detail: moduleMap[row.quiz_id] || null }
         const key = row.quiz_id
         if (!grouped[key]) grouped[key] = { quiz_id: key, count: 0, lastAnswer: row }
