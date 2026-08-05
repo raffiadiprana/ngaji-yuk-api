@@ -66,41 +66,16 @@ export const answers = app => {
       if (!instructorId || isNaN(instructorId)) {
         throw new Error('instructor_id is required')
       }
-      const mods = await knexRef()('modules').where({ instructor_id: instructorId, is_deleted: 0 }).select('id')
-      const quizIds = [...new Set(mods.map(m => m.id).filter(Boolean))]
-      if (!quizIds.length) return []
-      const rows = await knexRef()('answers').whereIn('quiz_id', quizIds).orderBy('created_date', 'desc').limit(200)
-      const userIds = [...new Set(rows.map(r => r.user_id).filter(Boolean))]
-      const moduleIds = [...new Set(rows.map(r => r.quiz_id).filter(Boolean))]
-      const users = userIds.length ? await knexRef()('users').whereIn('id', userIds).select('id', 'username', 'email', 'role') : []
-      const modules = moduleIds.length ? await knexRef()('modules').whereIn('id', moduleIds).select('id', 'title', 'instructor_id') : []
-      const userMap = Object.fromEntries(users.map(u => [u.id, u]))
-      const moduleMap = Object.fromEntries(modules.map(m => [m.id, m]))
-      const grouped = {}
-      for (const row of rows) {
-        const rawUser = userMap[row.user_id] || null
-        row.user_detail = rawUser ? {
-          id: rawUser.id,
-          username: rawUser.username || null,
-          email: rawUser.email || null,
-          role: rawUser.role || null
-        } : null
-        row.quiz_detail = { module_detail: moduleMap[row.quiz_id] || null }
-        const key = row.quiz_id
-        if (!grouped[key]) grouped[key] = { quiz_id: key, count: 0, lastAnswer: row }
-        grouped[key].count += 1
-        const current = grouped[key].lastAnswer
-        const currentDate = typeof current.created_date === 'string' ? new Date(current.created_date).valueOf() : current.created_date
-        const rowDate = typeof row.created_date === 'string' ? new Date(row.created_date).valueOf() : row.created_date
-        if (rowDate > currentDate) grouped[key].lastAnswer = row
-      }
-      return Object.values(grouped).sort((a, b) => b.lastAnswer.created_date - a.lastAnswer.created_date)
+      return this._fetchInbox(instructorId)
     },
     async find(data, params) {
       const instructorId = Number(data?.instructor_id || params?.query?.instructor_id)
       if (!instructorId || isNaN(instructorId)) {
         throw new Error('instructor_id is required')
       }
+      return this._fetchInbox(instructorId)
+    },
+    async _fetchInbox(instructorId) {
       const mods = await knexRef()('modules').where({ instructor_id: instructorId, is_deleted: 0 }).select('id')
       const quizIds = [...new Set(mods.map(m => m.id).filter(Boolean))]
       if (!quizIds.length) return []
@@ -121,15 +96,20 @@ export const answers = app => {
           role: rawUser.role || null
         } : null
         row.quiz_detail = { module_detail: moduleMap[row.quiz_id] || null }
-        const key = row.quiz_id
-        if (!grouped[key]) grouped[key] = { quiz_id: key, count: 0, lastAnswer: row }
-        grouped[key].count += 1
-        const current = grouped[key].lastAnswer
-        const currentDate = typeof current.created_date === 'string' ? new Date(current.created_date).valueOf() : current.created_date
-        const rowDate = typeof row.created_date === 'string' ? new Date(row.created_date).valueOf() : row.created_date
-        if (rowDate > currentDate) grouped[key].lastAnswer = row
+        const key = `${row.quiz_id}-${row.user_id}`
+        if (!grouped[key]) grouped[key] = { quiz_id: row.quiz_id, user_id: row.user_id, count: 1, lastAnswer: row }
+        else {
+          grouped[key].count += 1
+          const currentDate = typeof grouped[key].lastAnswer.created_date === 'string' ? new Date(grouped[key].lastAnswer.created_date).valueOf() : grouped[key].lastAnswer.created_date
+          const rowDate = typeof row.created_date === 'string' ? new Date(row.created_date).valueOf() : row.created_date
+          if (rowDate > currentDate) grouped[key].lastAnswer = row
+        }
       }
-      return Object.values(grouped).sort((a, b) => b.lastAnswer.created_date - a.lastAnswer.created_date)
+      return Object.values(grouped).sort((a, b) => {
+        const aDate = typeof b.lastAnswer.created_date === 'string' ? new Date(b.lastAnswer.created_date).valueOf() : b.lastAnswer.created_date
+        const bDate = typeof a.lastAnswer.created_date === 'string' ? new Date(a.lastAnswer.created_date).valueOf() : a.lastAnswer.created_date
+        return aDate - bDate
+      })
     }
   })
 
